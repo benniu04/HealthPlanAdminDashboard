@@ -1,0 +1,11 @@
+service_date,provider,description,billed_amount,cpt_code,icd_code
+2025-03-15,Dr. James Mitchell,Office visit - established patient follow-up,150.00,99213,J06.9
+2025-03-15,Quest Diagnostics,Comprehensive metabolic panel,50.00,80053,E11.9
+2025-03-16,Quest Diagnostics,Complete blood count,30.00,85025,Z00.00
+2025-03-18,ClearView Radiology,MRI lumbar spine without contrast,2000.00,72148,M54.5
+2025-03-20,Mindful Health Associates,Psychotherapy session 45 min,150.00,90834,F41.1
+2025-03-22,CVS Pharmacy,Lisinopril 10mg 30-day supply,15.00,RX,I10
+2025-03-22,CVS Pharmacy,Metformin 500mg 30-day supply,8.00,RX,E11.9
+2025-03-25,Dr. Priya Patel,Office visit - diabetes management,220.00,99214,E11.9
+2025-03-28,Regional Medical Center,ER visit - ankle sprain,650.00,99283,S93.401A
+2025-03-30,Austin Physical Therapy,Therapeutic exercises session,80.00,97110,M54.5

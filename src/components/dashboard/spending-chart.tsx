@@ -34,7 +34,7 @@ export function SpendingChart({ data }: SpendingChartProps) {
               <XAxis dataKey="month" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tickFormatter={formatDollar} className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
               <Tooltip
-                formatter={(value: number) => formatDollar(value)}
+                formatter={(value) => formatDollar(Number(value))}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
