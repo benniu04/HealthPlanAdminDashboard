@@ -14,9 +14,9 @@ const typeIcons: Record<string, typeof Brain> = {
 };
 
 const severityColors: Record<string, string> = {
-  info: "bg-blue-100 text-blue-800",
-  warning: "bg-amber-100 text-amber-800",
-  critical: "bg-red-100 text-red-800",
+  info: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200",
+  warning: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200",
+  critical: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200",
 };
 
 export function InsightsWidget({ insights }: { insights: AIInsight[] }) {
@@ -24,7 +24,7 @@ export function InsightsWidget({ insights }: { insights: AIInsight[] }) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-base flex items-center gap-2">
-          <Brain className="h-4 w-4 text-purple-600" />
+          <Brain className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           AI Insights
         </CardTitle>
         <Link href="/ai-insights" className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
@@ -47,7 +47,7 @@ export function InsightsWidget({ insights }: { insights: AIInsight[] }) {
                   </Badge>
                 </div>
                 {insight.estimatedSavings && (
-                  <p className="text-xs text-green-600 font-medium">
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                     Est. savings: {formatCents(insight.estimatedSavings)}/yr
                   </p>
                 )}

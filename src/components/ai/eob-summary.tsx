@@ -77,10 +77,10 @@ export function EOBSummary({
   };
 
   return (
-    <Card className="border-purple-200">
+    <Card className="border-purple-200 dark:border-purple-700">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base flex items-center gap-2">
-          <Brain className="h-4 w-4 text-purple-600" />
+          <Brain className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           Plain-English Benefits Summary
         </CardTitle>
         {!summary && (
@@ -101,7 +101,7 @@ export function EOBSummary({
       </CardHeader>
       {summary && (
         <CardContent>
-          <div className="rounded-lg bg-purple-50/50 border border-purple-100 p-4">
+          <div className="rounded-lg bg-purple-50/50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-800 p-4">
             <div className="prose prose-sm max-w-none">
               {summary.split("\n").map((line, i) => {
                 if (line.startsWith("**") && line.endsWith("**")) {

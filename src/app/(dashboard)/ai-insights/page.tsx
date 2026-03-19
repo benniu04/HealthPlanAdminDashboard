@@ -9,17 +9,17 @@ import { Brain, TrendingDown, AlertTriangle, Lightbulb, DollarSign } from "lucid
 export const dynamic = "force-dynamic";
 
 const typeConfig: Record<string, { icon: typeof Brain; label: string; color: string }> = {
-  cost_saving: { icon: DollarSign, label: "Cost Savings", color: "bg-green-100 text-green-800" },
-  anomaly_alert: { icon: AlertTriangle, label: "Anomaly Alert", color: "bg-red-100 text-red-800" },
-  plan_design: { icon: Lightbulb, label: "Plan Design", color: "bg-blue-100 text-blue-800" },
-  provider_switch: { icon: TrendingDown, label: "Provider Switch", color: "bg-purple-100 text-purple-800" },
-  trend_warning: { icon: AlertTriangle, label: "Trend Warning", color: "bg-amber-100 text-amber-800" },
+  cost_saving: { icon: DollarSign, label: "Cost Savings", color: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200" },
+  anomaly_alert: { icon: AlertTriangle, label: "Anomaly Alert", color: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200" },
+  plan_design: { icon: Lightbulb, label: "Plan Design", color: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200" },
+  provider_switch: { icon: TrendingDown, label: "Provider Switch", color: "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200" },
+  trend_warning: { icon: AlertTriangle, label: "Trend Warning", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200" },
 };
 
 const severityColors: Record<string, string> = {
-  info: "bg-blue-100 text-blue-800",
-  warning: "bg-amber-100 text-amber-800",
-  critical: "bg-red-100 text-red-800",
+  info: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200",
+  warning: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200",
+  critical: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200",
 };
 
 export default async function AIInsightsPage() {
@@ -33,7 +33,7 @@ export default async function AIInsightsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Brain className="h-6 w-6 text-purple-600" />
+        <Brain className="h-6 w-6 text-purple-600 dark:text-purple-400" />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">AI Insights & Recommendations</h2>
           <p className="text-muted-foreground">
@@ -43,10 +43,10 @@ export default async function AIInsightsPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-green-200 bg-green-50/50">
+        <Card className="border-green-200 dark:border-green-700 bg-green-50/50 dark:bg-green-950/30">
           <CardContent className="pt-6">
-            <p className="text-sm text-green-700">Total Potential Savings</p>
-            <p className="text-3xl font-bold text-green-800">{formatCents(totalSavings)}<span className="text-sm font-normal">/year</span></p>
+            <p className="text-sm text-green-700 dark:text-green-300">Total Potential Savings</p>
+            <p className="text-3xl font-bold text-green-800 dark:text-green-200">{formatCents(totalSavings)}<span className="text-sm font-normal">/year</span></p>
           </CardContent>
         </Card>
         <Card>
@@ -58,7 +58,7 @@ export default async function AIInsightsPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Critical Alerts</p>
-            <p className="text-3xl font-bold text-red-600">
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400">
               {insights.filter(i => i.severity === "critical").length}
             </p>
           </CardContent>
@@ -107,11 +107,11 @@ export default async function AIInsightsPage() {
                   />
                 </div>
                 {insight.estimatedSavings && (
-                  <div className="mt-4 flex items-center gap-2 rounded-lg bg-green-50 p-3 border border-green-200">
-                    <DollarSign className="h-5 w-5 text-green-600" />
+                  <div className="mt-4 flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-950/50 p-3 border border-green-200 dark:border-green-700">
+                    <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
                     <div>
-                      <p className="text-sm font-medium text-green-800">Estimated Annual Savings</p>
-                      <p className="text-lg font-bold text-green-700">{formatCents(insight.estimatedSavings)}</p>
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">Estimated Annual Savings</p>
+                      <p className="text-lg font-bold text-green-700 dark:text-green-300">{formatCents(insight.estimatedSavings)}</p>
                     </div>
                   </div>
                 )}

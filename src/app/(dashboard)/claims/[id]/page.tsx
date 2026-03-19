@@ -72,12 +72,12 @@ export default async function ClaimDetailPage({ params }: PageProps) {
       </div>
 
       {claim.isAnomalous && claim.anomalyReason && (
-        <Card className="border-red-200 bg-red-50/50">
+        <Card className="border-red-200 dark:border-red-700 bg-red-50/50 dark:bg-red-950/30">
           <CardContent className="flex items-start gap-3 pt-4">
-            <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
             <div>
-              <p className="font-medium text-red-900">Anomaly Alert</p>
-              <p className="text-sm text-red-700">{claim.anomalyReason}</p>
+              <p className="font-medium text-red-900 dark:text-red-100">Anomaly Alert</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{claim.anomalyReason}</p>
             </div>
           </CardContent>
         </Card>
@@ -130,13 +130,13 @@ export default async function ClaimDetailPage({ params }: PageProps) {
                   <span className="text-sm text-muted-foreground">Allowed Amount</span>
                   <span className="font-medium">{formatCents(claim.allowedAmount)}</span>
                 </div>
-                <div className="flex justify-between rounded-lg border p-3 bg-green-50">
-                  <span className="text-sm text-green-700">Plan Paid</span>
-                  <span className="font-medium text-green-700">{formatCents(claim.paidAmount)}</span>
+                <div className="flex justify-between rounded-lg border p-3 bg-green-50 dark:bg-green-950/50">
+                  <span className="text-sm text-green-700 dark:text-green-300">Plan Paid</span>
+                  <span className="font-medium text-green-700 dark:text-green-300">{formatCents(claim.paidAmount)}</span>
                 </div>
-                <div className="flex justify-between rounded-lg border p-3 bg-amber-50">
-                  <span className="text-sm text-amber-700">Member Responsibility</span>
-                  <span className="font-medium text-amber-700">{formatCents(claim.memberResponsibility)}</span>
+                <div className="flex justify-between rounded-lg border p-3 bg-amber-50 dark:bg-amber-950/50">
+                  <span className="text-sm text-amber-700 dark:text-amber-300">Member Responsibility</span>
+                  <span className="font-medium text-amber-700 dark:text-amber-300">{formatCents(claim.memberResponsibility)}</span>
                 </div>
               </div>
               <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">

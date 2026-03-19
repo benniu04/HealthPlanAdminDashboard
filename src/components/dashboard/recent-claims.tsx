@@ -58,7 +58,7 @@ export async function RecentClaims() {
               return (
                 <TableRow key={claim.id}>
                   <TableCell>
-                    <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 hover:underline">
+                    <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                       {claim.claimNumber}
                     </Link>
                     {claim.isAnomalous && (

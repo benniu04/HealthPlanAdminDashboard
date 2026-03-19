@@ -56,7 +56,7 @@ export default async function PlansPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Shield className="h-6 w-6 text-blue-600" />
+        <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Plan Configurations</h2>
           <p className="text-muted-foreground">

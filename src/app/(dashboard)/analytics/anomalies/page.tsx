@@ -51,7 +51,7 @@ export default async function AnomaliesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <AlertTriangle className="h-6 w-6 text-amber-600" />
+        <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Anomaly Detection</h2>
           <p className="text-muted-foreground">
@@ -64,10 +64,10 @@ export default async function AnomaliesPage() {
         {Object.entries(reasonGroups).map(([reason, groupClaims]) => {
           const totalAmount = groupClaims.reduce((sum, c) => sum + c.billedAmount, 0);
           return (
-            <Card key={reason} className="border-amber-200">
+            <Card key={reason} className="border-amber-200 dark:border-amber-700">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                   {reason}
                 </CardTitle>
               </CardHeader>
@@ -101,9 +101,9 @@ export default async function AnomaliesPage() {
             </TableHeader>
             <TableBody>
               {anomalousClaims.map((claim) => (
-                <TableRow key={claim.id} className="bg-red-50/30">
+                <TableRow key={claim.id} className="bg-red-50/30 dark:bg-red-950/20">
                   <TableCell>
-                    <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 hover:underline">
+                    <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                       {claim.claimNumber}
                     </Link>
                   </TableCell>
@@ -119,7 +119,7 @@ export default async function AnomaliesPage() {
                   <TableCell className="text-sm text-muted-foreground">{claim.serviceDate}</TableCell>
                   <TableCell className="text-right text-sm font-medium">{formatCents(claim.billedAmount)}</TableCell>
                   <TableCell>
-                    <p className="text-xs text-red-700 max-w-[200px]">{claim.anomalyReason}</p>
+                    <p className="text-xs text-red-700 dark:text-red-300 max-w-[200px]">{claim.anomalyReason}</p>
                   </TableCell>
                 </TableRow>
               ))}

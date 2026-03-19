@@ -29,7 +29,7 @@ export function ClaimActions({ claimId, currentStatus }: { claimId: string; curr
   }
 
   return (
-    <Card className="border-blue-200">
+    <Card className="border-blue-200 dark:border-blue-700">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm">Review Actions</CardTitle>
       </CardHeader>

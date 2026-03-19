@@ -35,7 +35,7 @@ export default async function EmployeesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Users className="h-6 w-6 text-blue-600" />
+        <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Employees</h2>
           <p className="text-muted-foreground">
@@ -62,7 +62,7 @@ export default async function EmployeesPage() {
               {employeeData.map((emp) => (
                 <TableRow key={emp.id}>
                   <TableCell>
-                    <Link href={`/employees/${emp.id}`} className="font-medium text-blue-600 hover:underline">
+                    <Link href={`/employees/${emp.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                       {emp.firstName} {emp.lastName}
                     </Link>
                   </TableCell>

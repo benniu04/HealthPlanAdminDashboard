@@ -66,9 +66,9 @@ export default async function ReviewQueuePage() {
               {reviewClaims.map((claim) => {
                 const statusConfig = CLAIM_STATUSES.find(s => s.value === claim.status);
                 return (
-                  <TableRow key={claim.id} className={claim.isAnomalous ? "bg-red-50/50" : ""}>
+                  <TableRow key={claim.id} className={claim.isAnomalous ? "bg-red-50/50 dark:bg-red-950/30" : ""}>
                     <TableCell>
-                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 hover:underline">
+                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                         {claim.claimNumber}
                       </Link>
                     </TableCell>

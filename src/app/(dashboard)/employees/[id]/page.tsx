@@ -128,11 +128,11 @@ export default async function EmployeeDetailPage({ params }: PageProps) {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Plan Paid</span>
-              <span className="font-medium text-green-600">{formatCents(spendStats.total)}</span>
+              <span className="font-medium text-green-600 dark:text-green-400">{formatCents(spendStats.total)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Member Paid</span>
-              <span className="font-medium text-amber-600">{formatCents(spendStats.memberTotal)}</span>
+              <span className="font-medium text-amber-600 dark:text-amber-400">{formatCents(spendStats.memberTotal)}</span>
             </div>
           </CardContent>
         </Card>
@@ -172,7 +172,7 @@ export default async function EmployeeDetailPage({ params }: PageProps) {
                 return (
                   <TableRow key={claim.id}>
                     <TableCell>
-                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 hover:underline">
+                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                         {claim.claimNumber}
                       </Link>
                     </TableCell>

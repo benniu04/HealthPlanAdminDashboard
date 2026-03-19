@@ -94,9 +94,9 @@ export default async function ClaimsPage({ searchParams }: PageProps) {
                 const statusConfig = CLAIM_STATUSES.find(s => s.value === claim.status);
                 const categoryConfig = SERVICE_CATEGORIES.find(c => c.value === claim.serviceCategory);
                 return (
-                  <TableRow key={claim.id} className={claim.isAnomalous ? "bg-red-50/50" : ""}>
+                  <TableRow key={claim.id} className={claim.isAnomalous ? "bg-red-50/50 dark:bg-red-950/30" : ""}>
                     <TableCell>
-                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 hover:underline">
+                      <Link href={`/claims/${claim.id}`} className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
                         {claim.claimNumber}
                       </Link>
                       {claim.isAnomalous && (

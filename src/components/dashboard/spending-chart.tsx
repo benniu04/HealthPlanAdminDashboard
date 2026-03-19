@@ -27,21 +27,23 @@ export function SpendingChart({ data }: SpendingChartProps) {
         <CardTitle className="text-base">Monthly Spending Trends</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-80">
+        <div className="h-80 text-muted-foreground">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis dataKey="month" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
-              <YAxis tickFormatter={formatDollar} className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.2} />
+              <XAxis dataKey="month" fontSize={12} tick={{ fill: "currentColor" }} tickLine={{ stroke: "currentColor" }} />
+              <YAxis tickFormatter={formatDollar} fontSize={12} tick={{ fill: "currentColor" }} tickLine={{ stroke: "currentColor" }} />
               <Tooltip
                 formatter={(value) => formatDollar(Number(value))}
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--color-card)",
+                  border: "1px solid var(--color-border)",
                   borderRadius: "8px",
+                  color: "var(--color-foreground)",
                 }}
+                labelStyle={{ color: "var(--color-foreground)" }}
               />
-              <Legend />
+              <Legend wrapperStyle={{ color: "var(--color-foreground)" }} />
               <Line type="monotone" dataKey="medical" stroke="#3b82f6" strokeWidth={2} dot={false} name="Medical" />
               <Line type="monotone" dataKey="pharmacy" stroke="#8b5cf6" strokeWidth={2} dot={false} name="Pharmacy" />
               <Line type="monotone" dataKey="behavioral" stroke="#ec4899" strokeWidth={2} dot={false} name="Behavioral" />

@@ -33,7 +33,7 @@ export default async function ProvidersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Building2 className="h-6 w-6 text-blue-600" />
+        <Building2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Provider Directory</h2>
           <p className="text-muted-foreground">

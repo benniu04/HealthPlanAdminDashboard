@@ -35,7 +35,7 @@ export function ProviderCostTable({ data }: { data: ProviderCost[] }) {
                 <p className="text-xs text-muted-foreground">
                   {p.count} claims | Avg: {formatCents(Math.round(p.avg))}
                   {p.avgCostIndex && p.avgCostIndex > 1.5 && (
-                    <span className="text-red-600 ml-1">| Cost index: {p.avgCostIndex.toFixed(1)}x</span>
+                    <span className="text-red-600 dark:text-red-400 ml-1">| Cost index: {p.avgCostIndex.toFixed(1)}x</span>
                   )}
                 </p>
               </div>

@@ -12,12 +12,12 @@ export const SERVICE_CATEGORIES = [
 ] as const;
 
 export const CLAIM_STATUSES = [
-  { value: "pending", label: "Pending", color: "bg-yellow-100 text-yellow-800" },
-  { value: "in_review", label: "In Review", color: "bg-blue-100 text-blue-800" },
-  { value: "approved", label: "Approved", color: "bg-green-100 text-green-800" },
-  { value: "denied", label: "Denied", color: "bg-red-100 text-red-800" },
-  { value: "appealed", label: "Appealed", color: "bg-orange-100 text-orange-800" },
-  { value: "paid", label: "Paid", color: "bg-emerald-100 text-emerald-800" },
+  { value: "pending", label: "Pending", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" },
+  { value: "in_review", label: "In Review", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" },
+  { value: "approved", label: "Approved", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" },
+  { value: "denied", label: "Denied", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" },
+  { value: "appealed", label: "Appealed", color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400" },
+  { value: "paid", label: "Paid", color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400" },
 ] as const;
 
 export const COMMON_CPT_CODES: Record<string, { description: string; category: string; avgCost: number }> = {
