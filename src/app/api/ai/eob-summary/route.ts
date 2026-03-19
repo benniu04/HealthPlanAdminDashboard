@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { formatCents } from "@/lib/constants";
+import { eobSummarySchema } from "@/lib/schemas";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { employeeName, planName, planType, deductible, oopMax, totalPaid, totalMemberPaid, claimCount } = body;
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parsed = eobSummarySchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    );
+  }
+
+  const { employeeName, planName, planType, deductible, oopMax, totalPaid, totalMemberPaid, claimCount } = parsed.data;
 
   if (process.env.ANTHROPIC_API_KEY) {
     try {

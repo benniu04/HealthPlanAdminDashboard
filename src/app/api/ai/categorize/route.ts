@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateUploadFile } from "@/lib/schemas";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -8,7 +9,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
+  const validationError = validateUploadFile(file);
+  if (validationError) {
+    return NextResponse.json({ error: validationError }, { status: 400 });
+  }
+
   const text = await file.text();
+
+  if (!text.trim()) {
+    return NextResponse.json({ error: "File is empty" }, { status: 400 });
+  }
 
   // If ANTHROPIC_API_KEY is available, use Claude for categorization
   if (process.env.ANTHROPIC_API_KEY) {
@@ -39,8 +49,18 @@ Return ONLY the JSON array, no other text.`,
 
       const content = response.content[0];
       if (content.type === "text") {
-        const claims = JSON.parse(content.text);
-        return NextResponse.json({ claims });
+        try {
+          const claims = JSON.parse(content.text);
+          if (!Array.isArray(claims)) {
+            throw new Error("Expected JSON array");
+          }
+          return NextResponse.json({ claims });
+        } catch {
+          return NextResponse.json(
+            { error: "AI returned invalid response format" },
+            { status: 502 }
+          );
+        }
       }
     } catch (error) {
       console.error("AI categorization error:", error);
