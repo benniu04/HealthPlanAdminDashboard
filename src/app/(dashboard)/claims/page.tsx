@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatCents, CLAIM_STATUSES, SERVICE_CATEGORIES } from "@/lib/constants";
 import Link from "next/link";
 import { ClaimsFilters } from "@/components/claims/claims-filters";
+import { ExportButton } from "@/components/claims/export-button";
 
 export const dynamic = "force-dynamic";
 
@@ -64,11 +65,14 @@ export default async function ClaimsPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Claims</h2>
-        <p className="text-muted-foreground">
-          {count.toLocaleString()} total claims
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Claims</h2>
+          <p className="text-muted-foreground">
+            {count.toLocaleString()} total claims
+          </p>
+        </div>
+        <ExportButton status={status} category={category} />
       </div>
 
       <ClaimsFilters currentStatus={status} currentCategory={category} />
