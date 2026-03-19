@@ -1,4 +1,4 @@
-import { formatCents } from "@/lib/constants";
+import { formatCents, COMMON_CPT_CODES } from "@/lib/constants";
 
 export const CLAIM_CHAT_SYSTEM_PROMPT = `You are a claims analyst assistant for a health plan administrator. You help plan administrators understand and investigate claims.
 
@@ -64,4 +64,54 @@ Your individual deductible is ${formatCents(data.deductible)}. This is the amoun
 Your out-of-pocket maximum is ${formatCents(data.oopMax)}. Once you've paid this much in a plan year, your plan covers 100% of remaining covered expenses. This protects you from catastrophic medical costs.
 
 *If you have questions about a specific claim or your coverage, please contact your HR benefits team.*`;
+}
+
+export function buildAnomalyDetectionPrompt(
+  claimsData: ReadonlyArray<{
+    readonly claimId: string;
+    readonly claimNumber: string;
+    readonly cptCode: string | null;
+    readonly billedAmount: number;
+    readonly allowedAmount: number;
+    readonly paidAmount: number;
+    readonly serviceDate: string;
+    readonly providerName: string;
+    readonly employeeName: string;
+    readonly description: string | null;
+    readonly serviceCategory: string | null;
+  }>
+): string {
+  const cptReference = Object.entries(COMMON_CPT_CODES)
+    .map(([code, info]) => `${code}: ${info.description} (avg: ${formatCents(info.avgCost)})`)
+    .join("\n");
+
+  const claimsText = claimsData
+    .map(
+      (c) =>
+        `- ID: ${c.claimId} | #${c.claimNumber} | CPT: ${c.cptCode ?? "N/A"} | Billed: ${formatCents(c.billedAmount)} | Allowed: ${formatCents(c.allowedAmount)} | Paid: ${formatCents(c.paidAmount)} | Date: ${c.serviceDate} | Provider: ${c.providerName} | Employee: ${c.employeeName} | Category: ${c.serviceCategory ?? "N/A"} | Desc: ${c.description ?? "N/A"}`
+    )
+    .join("\n");
+
+  return `Analyze these health insurance claims for anomalies. Check for:
+
+1. **Billing anomalies**: Billed amounts significantly above average for the CPT code
+2. **Duplicate billing**: Same procedure, same provider, same patient on same/close dates
+3. **Coding inconsistencies**: Mismatches between service description and CPT code
+4. **Unusual patterns**: Frequency of visits, escalating costs, upcoding patterns
+
+CPT CODE REFERENCE (with average costs):
+${cptReference}
+
+CLAIMS TO ANALYZE:
+${claimsText}
+
+Respond with a JSON array. For each claim, return:
+{
+  "claimId": "<the claim ID>",
+  "isAnomalous": true/false,
+  "anomalyReason": "<specific reason or null if not anomalous>",
+  "confidence": <0.0 to 1.0>
+}
+
+Only flag claims where you have reasonable confidence (>0.6) of an actual anomaly. Be specific in your reasons. Return ONLY the JSON array, no other text.`;
 }

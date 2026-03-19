@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatCents } from "@/lib/constants";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { AnomalyDetectionButton } from "@/components/ai/anomaly-detection-button";
 
 export const dynamic = "force-dynamic";
 
@@ -50,14 +51,17 @@ export default async function AnomaliesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Anomaly Detection</h2>
-          <p className="text-muted-foreground">
-            {stats.totalAnomalous} anomalous claims detected with {formatCents(stats.totalExcessSpend)} in potentially excess charges.
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Anomaly Detection</h2>
+            <p className="text-muted-foreground">
+              {stats.totalAnomalous} anomalous claims detected with {formatCents(stats.totalExcessSpend)} in potentially excess charges.
+            </p>
+          </div>
         </div>
+        <AnomalyDetectionButton />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
