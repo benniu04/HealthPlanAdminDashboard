@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
-import { streamText } from "ai";
+import { generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { eobSummarySchema } from "@/lib/schemas";
+import { eobResponseSchema } from "@/lib/ai/schemas";
 import {
   EOB_SYSTEM_PROMPT,
   buildEobUserPrompt,
@@ -13,36 +14,38 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = eobSummarySchema.safeParse(body);
   if (!parsed.success) {
-    return new Response(
-      JSON.stringify({
-        error: "Validation failed",
-        details: parsed.error.flatten().fieldErrors,
-      }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
+    return Response.json(
+      { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
+      { status: 400 }
     );
   }
 
   const data = parsed.data;
 
   if (process.env.ANTHROPIC_API_KEY) {
-    const result = streamText({
-      model: anthropic("claude-sonnet-4-20250514"),
-      system: EOB_SYSTEM_PROMPT,
-      prompt: buildEobUserPrompt(data),
-    });
+    try {
+      const { text } = await generateText({
+        model: anthropic("claude-sonnet-4-20250514"),
+        system: EOB_SYSTEM_PROMPT,
+        prompt: buildEobUserPrompt(data),
+      });
 
-    return result.toTextStreamResponse();
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const eobParsed = eobResponseSchema.safeParse(JSON.parse(jsonMatch[0]));
+        if (eobParsed.success) {
+          return Response.json(eobParsed.data);
+        }
+      }
+    } catch {
+      // Fall through to fallback
+    }
   }
 
-  return new Response(buildEobFallbackSummary(data), {
-    headers: { "Content-Type": "text/plain" },
-  });
+  return Response.json(buildEobFallbackSummary(data));
 }

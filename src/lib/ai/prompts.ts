@@ -26,7 +26,7 @@ type EobPromptData = {
 };
 
 export const EOB_SYSTEM_PROMPT =
-  "You are a benefits communication specialist. Translate medical claims and insurance jargon into clear, empathetic language that a plan member can understand. Use analogies where helpful. Never use jargon without explaining it. Format with markdown bold for emphasis.";
+  "You are a benefits communication specialist. Translate medical claims and insurance jargon into clear, empathetic language that a plan member can understand. Use analogies where helpful. Never use jargon without explaining it. Respond with ONLY valid JSON, no markdown or other text.";
 
 export function buildEobUserPrompt(data: EobPromptData): string {
   return `Generate a plain-English benefits summary for this employee:
@@ -43,27 +43,56 @@ Write a clear, friendly summary covering:
 1. What their plan has covered so far
 2. What they've paid out of pocket
 3. How their deductible works
-4. Their safety net (OOP max)`;
+4. Their safety net (OOP max)
+
+Respond with ONLY a JSON object in this exact format:
+{
+  "title": "Benefits Summary for [employee name]",
+  "sections": [
+    {
+      "heading": "section title",
+      "icon": "clipboard|dollar|shield|heart",
+      "body": "clear explanation paragraph",
+      "highlight": { "label": "key metric label", "value": "formatted dollar amount or number" }
+    }
+  ],
+  "footer": "optional helpful note"
 }
 
-export function buildEobFallbackSummary(data: EobPromptData): string {
-  return `**Benefits Summary for ${data.employeeName}**
+Use these icons: "clipboard" for plan coverage, "dollar" for payments, "shield" for deductible, "heart" for safety net. Each section should have a highlight with the most important number. Return ONLY valid JSON.`;
+}
 
-You're enrolled in the **${data.planName}** (${data.planType} plan), which has been covering your healthcare costs this plan year.
-
-**What your plan has covered so far:**
-Your plan has processed ${data.claimCount} claims and paid ${formatCents(data.totalPaid)} toward your medical expenses. This means your insurance has been actively working to reduce your out-of-pocket costs.
-
-**What you've paid:**
-Your total out-of-pocket responsibility has been ${formatCents(data.totalMemberPaid)}, which includes your deductible payments, coinsurance (your share after the deductible), and any copays.
-
-**Understanding your deductible:**
-Your individual deductible is ${formatCents(data.deductible)}. This is the amount you pay before your plan starts sharing costs with you. Once you meet your deductible, the plan pays 80% of covered services and you pay the remaining 20%.
-
-**Your safety net:**
-Your out-of-pocket maximum is ${formatCents(data.oopMax)}. Once you've paid this much in a plan year, your plan covers 100% of remaining covered expenses. This protects you from catastrophic medical costs.
-
-*If you have questions about a specific claim or your coverage, please contact your HR benefits team.*`;
+export function buildEobFallbackSummary(data: EobPromptData) {
+  return {
+    title: `Benefits Summary for ${data.employeeName}`,
+    sections: [
+      {
+        heading: "What Your Plan Has Covered",
+        icon: "clipboard" as const,
+        body: `You're enrolled in the ${data.planName} (${data.planType} plan). Your plan has processed ${data.claimCount} claims and paid ${formatCents(data.totalPaid)} toward your medical expenses. Your insurance has been actively working to reduce your out-of-pocket costs.`,
+        highlight: { label: "Plan Paid", value: formatCents(data.totalPaid) },
+      },
+      {
+        heading: "What You've Paid",
+        icon: "dollar" as const,
+        body: `Your total out-of-pocket responsibility has been ${formatCents(data.totalMemberPaid)}, which includes your deductible payments, coinsurance (your share after the deductible), and any copays.`,
+        highlight: { label: "Your Total", value: formatCents(data.totalMemberPaid) },
+      },
+      {
+        heading: "Understanding Your Deductible",
+        icon: "shield" as const,
+        body: `Your individual deductible is ${formatCents(data.deductible)}. This is the amount you pay before your plan starts sharing costs with you. Once you meet your deductible, the plan pays 80% of covered services and you pay the remaining 20%.`,
+        highlight: { label: "Deductible", value: formatCents(data.deductible) },
+      },
+      {
+        heading: "Your Safety Net",
+        icon: "heart" as const,
+        body: `Your out-of-pocket maximum is ${formatCents(data.oopMax)}. Once you've paid this much in a plan year, your plan covers 100% of remaining covered expenses. This protects you from catastrophic medical costs.`,
+        highlight: { label: "OOP Maximum", value: formatCents(data.oopMax) },
+      },
+    ],
+    footer: "If you have questions about a specific claim or your coverage, please contact your HR benefits team.",
+  };
 }
 
 export function buildAnomalyDetectionPrompt(
