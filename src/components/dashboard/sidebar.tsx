@@ -3,6 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { UserButton, useUser } from "@clerk/nextjs";
+
+function UserInfo() {
+  const { user } = useUser();
+  return (
+    <div>
+      <p className="text-sm font-medium">{user?.fullName || "Loading..."}</p>
+      <p className="text-xs text-muted-foreground">{user?.primaryEmailAddress?.emailAddress}</p>
+    </div>
+  );
+}
 import {
   LayoutDashboard,
   FileText,
@@ -65,13 +76,8 @@ export function Sidebar() {
       </nav>
       <div className="border-t p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-            SC
-          </div>
-          <div>
-            <p className="text-sm font-medium">Sarah Chen</p>
-            <p className="text-xs text-muted-foreground">Admin</p>
-          </div>
+          <UserButton />
+          <UserInfo />
         </div>
       </div>
     </aside>
