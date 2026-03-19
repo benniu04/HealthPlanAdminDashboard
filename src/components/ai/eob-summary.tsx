@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useCompletion } from "@ai-sdk/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Brain, Loader2, FileText } from "lucide-react";
-import { formatCents } from "@/lib/constants";
 
-interface EOBSummaryProps {
-  employeeName: string;
-  planName: string;
-  planType: string;
-  deductible: number;
-  oopMax: number;
-  totalPaid: number;
-  totalMemberPaid: number;
-  claimCount: number;
+type EOBSummaryProps = {
+  readonly employeeName: string;
+  readonly planName: string;
+  readonly planType: string;
+  readonly deductible: number;
+  readonly oopMax: number;
+  readonly totalPaid: number;
+  readonly totalMemberPaid: number;
+  readonly claimCount: number;
+};
+
+function MarkdownLine({ line }: { readonly line: string }) {
+  if (line.startsWith("**") && line.endsWith("**")) {
+    return <h4 className="text-sm font-semibold mt-3 mb-1">{line.replace(/\*\*/g, "")}</h4>;
+  }
+  if (line.startsWith("*") && line.endsWith("*")) {
+    return <p className="text-xs text-muted-foreground italic mt-4">{line.replace(/\*/g, "")}</p>;
+  }
+  if (line.trim() === "") return <br />;
+  return (
+    <p className="text-sm text-muted-foreground leading-relaxed">
+      {line.split(/(\*\*.*?\*\*)/).map((part, j) =>
+        part.startsWith("**") ? (
+          <strong key={j} className="text-foreground">{part.replace(/\*\*/g, "")}</strong>
+        ) : (
+          part
+        )
+      )}
+    </p>
+  );
 }
 
 export function EOBSummary({
@@ -27,53 +47,24 @@ export function EOBSummary({
   totalMemberPaid,
   claimCount,
 }: EOBSummaryProps) {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { completion, isLoading, complete } = useCompletion({
+    api: "/api/ai/eob-summary",
+    streamProtocol: "text",
+  });
 
-  const generateSummary = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/ai/eob-summary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          employeeName,
-          planName,
-          planType,
-          deductible,
-          oopMax,
-          totalPaid,
-          totalMemberPaid,
-          claimCount,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSummary(data.summary);
-      }
-    } catch {
-      // Fallback demo summary
-      setSummary(
-        `**Benefits Summary for ${employeeName}**\n\n` +
-        `You're enrolled in the **${planName}** (${planType} plan), which has been covering your healthcare costs this plan year.\n\n` +
-        `**What your plan has covered so far:**\n` +
-        `Your plan has processed ${claimCount} claims and paid ${formatCents(totalPaid)} toward your medical expenses. ` +
-        `This means your insurance has been actively working to reduce your out-of-pocket costs.\n\n` +
-        `**What you've paid:**\n` +
-        `Your total out-of-pocket responsibility has been ${formatCents(totalMemberPaid)}, which includes your ` +
-        `deductible payments, coinsurance (your share after the deductible), and any copays.\n\n` +
-        `**Understanding your deductible:**\n` +
-        `Your individual deductible is ${formatCents(deductible)}. This is the amount you pay before your plan starts ` +
-        `sharing costs with you. Once you meet your deductible, the plan pays ${planType === "PPO" ? "80%" : "80%"} of ` +
-        `covered services and you pay the remaining ${planType === "PPO" ? "20%" : "20%"}.\n\n` +
-        `**Your safety net:**\n` +
-        `Your out-of-pocket maximum is ${formatCents(oopMax)}. Once you've paid this much in a plan year, ` +
-        `your plan covers 100% of remaining covered expenses. This protects you from catastrophic medical costs.\n\n` +
-        `*If you have questions about a specific claim or your coverage, please contact your HR benefits team.*`
-      );
-    } finally {
-      setLoading(false);
-    }
+  const handleGenerate = () => {
+    complete("", {
+      body: {
+        employeeName,
+        planName,
+        planType,
+        deductible,
+        oopMax,
+        totalPaid,
+        totalMemberPaid,
+        claimCount,
+      },
+    });
   };
 
   return (
@@ -83,9 +74,9 @@ export function EOBSummary({
           <Brain className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           Plain-English Benefits Summary
         </CardTitle>
-        {!summary && (
-          <Button onClick={generateSummary} disabled={loading} size="sm" variant="outline">
-            {loading ? (
+        {!completion && (
+          <Button onClick={handleGenerate} disabled={isLoading} size="sm" variant="outline">
+            {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Generating...
@@ -99,30 +90,16 @@ export function EOBSummary({
           </Button>
         )}
       </CardHeader>
-      {summary && (
+      {(completion || isLoading) && (
         <CardContent>
           <div className="rounded-lg bg-purple-50/50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-800 p-4">
             <div className="prose prose-sm max-w-none">
-              {summary.split("\n").map((line, i) => {
-                if (line.startsWith("**") && line.endsWith("**")) {
-                  return <h4 key={i} className="text-sm font-semibold mt-3 mb-1">{line.replace(/\*\*/g, "")}</h4>;
-                }
-                if (line.startsWith("*") && line.endsWith("*")) {
-                  return <p key={i} className="text-xs text-muted-foreground italic mt-4">{line.replace(/\*/g, "")}</p>;
-                }
-                if (line.trim() === "") return <br key={i} />;
-                return (
-                  <p key={i} className="text-sm text-muted-foreground leading-relaxed">
-                    {line.split(/(\*\*.*?\*\*)/).map((part, j) =>
-                      part.startsWith("**") ? (
-                        <strong key={j} className="text-foreground">{part.replace(/\*\*/g, "")}</strong>
-                      ) : (
-                        part
-                      )
-                    )}
-                  </p>
-                );
-              })}
+              {completion.split("\n").map((line: string, i: number) => (
+                <MarkdownLine key={i} line={line} />
+              ))}
+              {isLoading && (
+                <span className="inline-block w-2 h-4 bg-purple-500 dark:bg-purple-400 animate-pulse ml-0.5" />
+              )}
             </div>
           </div>
         </CardContent>
