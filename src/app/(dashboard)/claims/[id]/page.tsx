@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { formatCents, CLAIM_STATUSES, COMMON_CPT_CODES, COMMON_ICD_CODES } from "@/lib/constants";
 import { ClaimActions } from "@/components/claims/claim-actions";
+import { ClaimChat } from "@/components/ai/claim-chat";
 import { FileText, User, Building2, Calendar, DollarSign, AlertTriangle, Clock, CheckCircle, XCircle, Bot } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -212,6 +213,8 @@ export default async function ClaimDetailPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      <ClaimChat claimId={claim.id} claimNumber={claim.claimNumber} />
 
       {/* Audit Trail */}
       <Card>
