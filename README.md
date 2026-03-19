@@ -29,7 +29,6 @@ A full-stack health plan administration platform for self-funded employers, buil
 - Dashboard with KPIs: total spend, claim count, anomaly rate, pending claims
 - Spending trends by service category with interactive charts
 - Category breakdown and provider cost analysis
-- AI-generated insights for cost savings and plan optimization
 
 ### Platform
 - Authentication and role-based access via Clerk (admin, analyst, reviewer)
@@ -60,8 +59,7 @@ src/
 │   │   ├── employees/       # Employee directory and profiles
 │   │   ├── providers/       # Provider network
 │   │   ├── plans/           # Plan design management
-│   │   ├── analytics/       # Spending trends, anomaly detection
-│   │   └── ai-insights/     # AI-generated recommendations
+│   │   └── analytics/       # Spending trends, anomaly detection
 │   └── api/
 │       ├── ai/              # AI endpoints (chat, eob-summary, anomaly-detection, categorize)
 │       ├── claims/          # Claim CRUD and export
@@ -74,7 +72,7 @@ src/
 │   ├── dashboard/           # Layout (sidebar, header, stats)
 │   └── ui/                  # shadcn/ui primitives
 ├── db/
-│   ├── schema.ts            # 8 tables: companies, plans, employees, providers, claims, audit trail, insights, users
+│   ├── schema.ts            # 7 tables: companies, plans, employees, providers, claims, audit trail, users
 │   ├── seed.ts              # Realistic sample data generator
 │   └── index.ts             # DB connection (SQLite or Turso)
 └── lib/

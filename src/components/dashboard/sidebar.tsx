@@ -24,7 +24,6 @@ import {
   Building2,
   Users,
   Shield,
-  Brain,
   Heart,
 } from "lucide-react";
 
@@ -38,7 +37,6 @@ const navigation = [
   { name: "Providers", href: "/providers", icon: Building2 },
   { name: "Employees", href: "/employees", icon: Users },
   { name: "Plans", href: "/plans", icon: Shield },
-  { name: "AI Insights", href: "/ai-insights", icon: Brain },
 ];
 
 export function Sidebar() {

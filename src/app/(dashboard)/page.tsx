@@ -1,10 +1,9 @@
 import { db } from "@/db";
-import { claims, aiInsights } from "@/db/schema";
-import { sql, desc, eq } from "drizzle-orm";
+import { claims } from "@/db/schema";
+import { sql } from "drizzle-orm";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { SpendingChart } from "@/components/dashboard/spending-chart";
 import { RecentClaims } from "@/components/dashboard/recent-claims";
-import { InsightsWidget } from "@/components/dashboard/insights-widget";
 
 export const dynamic = "force-dynamic";
 
@@ -30,12 +29,6 @@ async function getDashboardData() {
     .groupBy(sql`substr(${claims.serviceDate}, 1, 7)`)
     .orderBy(sql`substr(${claims.serviceDate}, 1, 7)`);
 
-  const insights = await db
-    .select()
-    .from(aiInsights)
-    .orderBy(desc(aiInsights.createdAt))
-    .limit(5);
-
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const chartData = monthlySpending.map((row) => {
     const monthNum = parseInt(row.month.split("-")[1]) - 1;
@@ -47,11 +40,11 @@ async function getDashboardData() {
     };
   });
 
-  return { stats, chartData, insights };
+  return { stats, chartData };
 }
 
 export default async function DashboardPage() {
-  const { stats, chartData, insights } = await getDashboardData();
+  const { stats, chartData } = await getDashboardData();
 
   return (
     <div className="space-y-6">
@@ -70,12 +63,7 @@ export default async function DashboardPage() {
         pendingCount={stats.pendingCount}
       />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <SpendingChart data={chartData} />
-        </div>
-        <InsightsWidget insights={insights} />
-      </div>
+      <SpendingChart data={chartData} />
 
       <RecentClaims />
     </div>

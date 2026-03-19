@@ -104,20 +104,6 @@ export const claimAuditTrail = sqliteTable("claim_audit_trail", {
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
 
-export const aiInsights = sqliteTable("ai_insights", {
-  id: text("id").primaryKey(),
-  companyId: text("company_id").notNull().references(() => companies.id),
-  insightType: text("insight_type").notNull(), // cost_saving | anomaly_alert | plan_design | provider_switch | trend_warning
-  title: text("title").notNull(),
-  summary: text("summary").notNull(),
-  detail: text("detail").notNull(),
-  severity: text("severity").notNull().default("info"), // info | warning | critical
-  estimatedSavings: integer("estimated_savings"), // cents
-  status: text("status").notNull().default("new"), // new | viewed | acted_on | dismissed
-  relatedClaimIds: text("related_claim_ids"), // JSON array
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-});
-
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),

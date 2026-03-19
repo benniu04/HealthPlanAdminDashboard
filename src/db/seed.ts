@@ -117,19 +117,6 @@ sqlite.exec(`
     metadata TEXT,
     created_at INTEGER NOT NULL
   );
-  CREATE TABLE IF NOT EXISTS ai_insights (
-    id TEXT PRIMARY KEY,
-    company_id TEXT NOT NULL REFERENCES companies(id),
-    insight_type TEXT NOT NULL,
-    title TEXT NOT NULL,
-    summary TEXT NOT NULL,
-    detail TEXT NOT NULL,
-    severity TEXT NOT NULL DEFAULT 'info',
-    estimated_savings INTEGER,
-    status TEXT NOT NULL DEFAULT 'new',
-    related_claim_ids TEXT,
-    created_at INTEGER NOT NULL
-  );
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
@@ -151,10 +138,6 @@ function randInt(min: number, max: number): number {
 
 function dateStr(year: number, month: number, day: number): string {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-}
-
-function daysAgo(d: string): number {
-  return Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
 }
 
 // ── Company ──────────────────────────────────────────────
@@ -569,66 +552,6 @@ for (let month = 1; month <= 12; month++) {
   }
 }
 
-// ── AI Insights (pre-seeded) ──────────────────────────────
-const insights = [
-  {
-    type: "provider_switch",
-    title: "Switch imaging provider to save $47,000/year",
-    summary: "Pinnacle Imaging Center charges 2.8x market average for MRI and CT scans. ClearView Radiology offers identical services at standard rates.",
-    detail: `## Provider Cost Analysis: Imaging Services\n\nPinnacle Imaging Center is currently charging an average of **$700** per MRI scan, compared to the market average of **$250**. Over the past 12 months, Meridian employees had 67 imaging procedures at Pinnacle.\n\n### Recommended Action\nSwitch preferred imaging provider to **ClearView Radiology** (4.1★ rating, in-network).\n\n### Estimated Impact\n- **Annual savings: $47,150**\n- No disruption to employee access\n- ClearView has shorter average wait times (3 days vs 8 days)\n\n### Claims Affected\n67 imaging claims totaling $46,900 in excess charges over the past year.`,
-    severity: "critical",
-    savings: 4715000,
-  },
-  {
-    type: "trend_warning",
-    title: "Behavioral health claims up 45% in Q3",
-    summary: "Mental health service utilization spiked significantly in August-September. This may indicate workforce stress that could be addressed with an EAP.",
-    detail: `## Trend Alert: Behavioral Health Utilization\n\nBehavioral health claims increased **45%** in Q3 2025 compared to Q2:\n- Q2 average: 18 claims/month\n- Q3 average: 26 claims/month\n- August peak: 38 claims\n\n### Root Cause Analysis\nThe spike correlates with the company's Q3 product launch period. Most claims are for anxiety (F41.1) and depression (F32.1) diagnoses.\n\n### Recommendations\n1. **Add an Employee Assistance Program (EAP)** - Estimated cost: $3/employee/month ($7,200/year)\n2. **Consider telehealth mental health benefit** - Can reduce per-session costs by 30%\n3. **Review workload policies** during major launch periods\n\n### Projected Impact\nAn EAP could reduce behavioral health claims by 20-30%, saving approximately **$18,000/year** while improving employee wellbeing.`,
-    severity: "warning",
-    savings: 1800000,
-  },
-  {
-    type: "anomaly_alert",
-    title: "12 potential duplicate claims detected",
-    summary: "Multiple claims from the same provider on the same service date with identical charge amounts suggest possible billing errors.",
-    detail: `## Duplicate Claim Analysis\n\n**12 claims** have been flagged as potential duplicates based on matching:\n- Same employee\n- Same service date\n- Same CPT code\n- Same provider\n\n### Breakdown\n- 8 claims appear to be exact duplicates (same amounts)\n- 4 claims have slight variations (may be legitimate separate services)\n\n### Recommended Action\n1. Review flagged claims individually\n2. Contact providers to confirm services rendered\n3. Request refunds for confirmed duplicates\n\n### Estimated Recovery\nIf 8 of 12 are confirmed duplicates: **$12,400** in recoverable overpayments.`,
-    severity: "warning",
-    savings: 1240000,
-  },
-  {
-    type: "plan_design",
-    title: "HDHP members deferring preventive care",
-    summary: "Silver HDHP members are 40% less likely to complete annual preventive visits compared to Gold PPO members, potentially leading to higher costs from undetected conditions.",
-    detail: `## Plan Design Insight: Preventive Care Gap\n\n### Finding\nOnly **34%** of HDHP members completed their annual preventive visit, compared to **62%** of PPO members.\n\n### Why This Matters\nDeferred preventive care leads to:\n- Late detection of chronic conditions (diabetes, hypertension)\n- Higher ER utilization for preventable issues\n- Estimated **$85,000/year** in excess claims from unmanaged conditions\n\n### Recommendation\n**Waive the deductible for preventive services** on the HDHP plan.\n- ACA already requires this for many preventive services\n- Extending to all preventive visits (including labs) costs approximately **$12,000/year**\n- ROI: $7 saved for every $1 spent on preventive care\n\n### Implementation\nThis change can be made at the next plan renewal with minimal administrative effort.`,
-    severity: "info",
-    savings: 8500000,
-  },
-  {
-    type: "cost_saving",
-    title: "Negotiate reference-based pricing for hospital services",
-    summary: "Hospital claims at University Health System are 30% above Medicare benchmark rates. Reference-based pricing could save $62,000 annually.",
-    detail: `## Cost Optimization: Hospital Pricing\n\n### Analysis\nUniversity Health System charges average **130% of Medicare** rates for inpatient and outpatient services. Industry benchmark for negotiated rates is **110-120% of Medicare**.\n\n### Current Spend\n- Total hospital claims (12 months): $890,000\n- Estimated excess over benchmark: $62,000\n\n### Recommendation\nImplement **reference-based pricing (RBP)** for hospital services:\n1. Set allowed amounts at 120% of Medicare rates\n2. Negotiate with UHS for an in-network RBP arrangement\n3. Alternatively, steer to Regional Medical Center (currently at 110% Medicare)\n\n### Risks\n- Provider pushback (mitigated by market competition)\n- Member balance billing (mitigated by state surprise billing protections)\n\n### Estimated Annual Savings: $62,000`,
-    severity: "info",
-    savings: 6200000,
-  },
-];
-
-for (const insight of insights) {
-  db.insert(schema.aiInsights).values({
-    id: ulid(),
-    companyId,
-    insightType: insight.type,
-    title: insight.title,
-    summary: insight.summary,
-    detail: insight.detail,
-    severity: insight.severity,
-    estimatedSavings: insight.savings,
-    status: "new",
-    relatedClaimIds: null,
-    createdAt: new Date(),
-  }).run();
-}
-
 // ── High utilization employee anomaly ─────────────────────
 // Pick one employee and give them excessive claims
 const highUtilEmpId = employeeIds[42];
@@ -676,7 +599,6 @@ console.log(`   - 3 demo users`);
 console.log(`   - ${providerData.length} providers`);
 console.log(`   - 200 employees`);
 console.log(`   - ${claimCounter} claims`);
-console.log(`   - ${insights.length} AI insights`);
 console.log(`   - Audit trail entries for processed claims`);
 
 sqlite.close();

@@ -6,7 +6,6 @@ import type {
   providers,
   claims,
   claimAuditTrail,
-  aiInsights,
   users,
 } from "@/db/schema";
 
@@ -16,7 +15,6 @@ export type Employee = InferSelectModel<typeof employees>;
 export type Provider = InferSelectModel<typeof providers>;
 export type Claim = InferSelectModel<typeof claims>;
 export type ClaimAuditEntry = InferSelectModel<typeof claimAuditTrail>;
-export type AIInsight = InferSelectModel<typeof aiInsights>;
 export type User = InferSelectModel<typeof users>;
 
 export type ClaimStatus = "pending" | "in_review" | "approved" | "denied" | "appealed" | "paid";
@@ -32,8 +30,6 @@ export type ServiceCategory =
   | "mental_health"
   | "maternity"
   | "rehabilitation";
-export type InsightType = "cost_saving" | "anomaly_alert" | "plan_design" | "provider_switch" | "trend_warning";
-export type Severity = "info" | "warning" | "critical";
 
 export interface ClaimWithRelations extends Claim {
   employee?: Employee;
