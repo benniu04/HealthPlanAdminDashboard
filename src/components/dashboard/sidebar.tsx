@@ -55,8 +55,8 @@ export function Sidebar() {
       </div>
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navigation.map((item) => {
-          const isActive = pathname === item.href ||
-            (item.href !== "/" && pathname.startsWith(item.href));
+          // Exact match only — prevents parent routes from highlighting on child pages
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
